@@ -7,12 +7,14 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -144,5 +146,33 @@ public class ProductController {
     //     System.out.println("Sending message to WhatsApp group: " + whatsappGroupRequest.getMessage());
     //     return ResponseEntity.ok("Message sent to WhatsApp group successfully");
     // }
+
+    @GetMapping("/{productId}/image")
+    public ResponseEntity<byte[]> getProductImage(@PathVariable Long productId) {
+        try {
+            Path imagesDir = Paths.get("src/main/resources/images/products/" + productId);
+            if (!Files.exists(imagesDir)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            // Retrieve the first image file in the directory
+            List<Path> imageFiles = Files.list(imagesDir)
+                                         .filter(Files::isRegularFile)
+                                         .collect(Collectors.toList());
+            if (imageFiles.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            
+            Path imageFile = imageFiles.get(0);
+            byte[] imageBytes = Files.readAllBytes(imageFile);
+            String mimeType = Files.probeContentType(imageFile);
+            
+            return ResponseEntity.ok()
+                                 .header("Content-Type", mimeType)
+                                 .body(imageBytes);
+        } catch (IOException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 }
 
