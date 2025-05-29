@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ad.ssms.product.Product;
 import com.ad.ssms.product.ProductRepository;
+import com.ad.ssms.sale.Sale;
 
 @Service
 public class PurchaseService {
@@ -37,5 +38,15 @@ public class PurchaseService {
 
     public List<Purchase> findAllPurchases() {
         return purchaseRepository.findAll();
+    }
+
+    public List<Purchase> getRecentPurchases() {
+        return purchaseRepository.findTop5ByOrderByDateDesc();
+    }
+
+    public int getTotalPurchases() {
+                return (int) purchaseRepository.findAll().stream()
+                .mapToDouble(Purchase:: getTotalPrice)
+                .sum();
     }
 }
