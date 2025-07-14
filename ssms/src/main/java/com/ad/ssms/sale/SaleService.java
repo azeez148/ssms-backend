@@ -1,7 +1,8 @@
 package com.ad.ssms.sale;
 
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,4 +88,30 @@ public void enqueueWhatsAppMessage(String userPhone, String message) {
     String payload = String.format("{\"phone\": \"%s\", \"message\": \"%s\"}", userPhone, message);
     redisCommands.lpush("whatsapp:queue", payload);  // Use LPUSH / RPUSH
 }
+
+public List<Sale> getRecentSales() {
+    return saleRepository.findTop5ByOrderByDateDesc();
+}
+
+    public Map<String, Integer> getMostSoldItems() {
+        // Aggregate sale item quantities by product name from all sales
+        List<Sale> sales = saleRepository.findAll();
+        Map<String, Integer> productSales = new HashMap<>();
+        for (Sale sale : sales) {
+            if (sale.getSaleItems() != null) {
+                for (SaleItem item : sale.getSaleItems()) {
+                    productSales.merge(item.getProductName(), item.getQuantity(), Integer::sum);
+                }
+            }
+        }
+        return productSales;
+    }
+
+    public int getTotalSales() {
+        // Sum the total price from all sales
+        return (int) saleRepository.findAll().stream()
+                .mapToDouble(Sale::getTotalPrice)
+                .sum();
+    }
+
 }
