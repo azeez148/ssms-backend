@@ -29,17 +29,20 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    // Define the sizeMap as an ElementCollection
+    @ElementCollection
+    @MapKeyColumn(name = "size")  // This defines the name of the column that will hold the map keys (sizes)
+    @Column(name = "quantity")    // This defines the name of the column that will hold the map values (quantities)
+    private Map<String, Integer> sizeMap;
 
-     // Define the sizeMap as an ElementCollection
-     @ElementCollection
-     @MapKeyColumn(name = "size")  // This defines the name of the column that will hold the map keys (sizes)
-     @Column(name = "quantity")    // This defines the name of the column that will hold the map values (quantities)
-     private Map<String, Integer> sizeMap;
+    private int unitPrice;
+    private int sellingPrice;
 
-     private int unitPrice;
-     private int sellingPrice;
+    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default false")
+    private boolean isActive = false;
+    @Column(name = "can_listed", nullable = false, columnDefinition = "boolean default false")
+    private boolean canListed = false;
 
-    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -91,7 +94,26 @@ public class Product {
     public int getSellingPrice() {
         return sellingPrice;
     }
+
     public void setSellingPrice(int sellingPrice) {
+
         this.sellingPrice = sellingPrice;
     }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public boolean isCanListed() {
+        return canListed;
+    }
+
+    public void setCanListed(boolean canListed) {
+        this.canListed = canListed;
+    }
+
 }

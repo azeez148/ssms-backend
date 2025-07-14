@@ -15,6 +15,11 @@ public class Dashboard {
     private int totalPurchases;
     private double totalCost;
 
+    private int totalItemsInStock;
+    private double totalStockValue;
+
+    private Map<String, Integer> categoryItemCounts;
+
     public Dashboard() {
     }
 
@@ -69,4 +74,23 @@ public class Dashboard {
     public void setMostSoldItems(Map<String, Integer> mostSoldItems) {
         this.mostSoldItems = mostSoldItems;
     }
+    public int getTotalItemsInStock() {
+        return totalItemsInStock;
+    }
+    public void setTotalItemsInStock(int totalItemsInStock) {
+        this.totalItemsInStock = totalItemsInStock;
+    }
+    public double getTotalStockValue() {
+        return totalStockValue;
+    }
+    public void setTotalStockValue(double totalStockValue) {
+        this.totalStockValue = totalStockValue;
+    }
+    public Map<String, Integer> getCategoryItemCounts() {
+        return categoryItemCounts;
+    }
+    public void setCategoryItemCounts(Map<String, Integer> categoryItemCounts) {
+        this.categoryItemCounts = categoryItemCounts;
+    }
+
 }
