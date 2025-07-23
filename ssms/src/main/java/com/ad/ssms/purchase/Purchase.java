@@ -26,6 +26,7 @@ public class Purchase {
     private String supplierName;
     private String supplierAddress;
     private String supplierMobile;
+    private String supplierEmail;
     private String date; // could be Date type if desired
 
     @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL)
@@ -46,7 +47,6 @@ public class Purchase {
     private DeliveryType deliveryType;
 
     // Constructors, Getters, and Setters
-
     public Purchase() {
     }
 
@@ -80,6 +80,14 @@ public class Purchase {
 
     public void setSupplierMobile(String supplierMobile) {
         this.supplierMobile = supplierMobile;
+    }
+
+    public String getSupplierEmail() {
+        return supplierEmail;
+    }
+
+    public void setSupplierEmail(String supplierEmail) {
+        this.supplierEmail = supplierEmail;
     }
 
     public String getDate() {

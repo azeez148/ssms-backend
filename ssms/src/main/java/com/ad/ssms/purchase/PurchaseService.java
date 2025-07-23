@@ -14,9 +14,12 @@ public class PurchaseService {
 
     @Autowired
     private PurchaseRepository purchaseRepository;
-    
+
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private com.ad.ssms.notification.PurchaseNotificationService purchaseNotificationService;
 
     public Purchase savePurchase(Purchase purchase) {
         if (purchase.getPurchaseItems() != null) {
@@ -33,7 +36,15 @@ public class PurchaseService {
                 item.setPurchase(purchase);
             });
         }
-        return purchaseRepository.save(purchase);
+
+        // Save the purchase first
+        Purchase savedPurchase = purchaseRepository.save(purchase);
+
+        // Send notifications
+        purchaseNotificationService.sendPurchaseNotifications(savedPurchase);
+
+        return savedPurchase;
+
     }
 
     public List<Purchase> findAllPurchases() {
@@ -45,8 +56,8 @@ public class PurchaseService {
     }
 
     public int getTotalPurchases() {
-                return (int) purchaseRepository.findAll().stream()
-                .mapToDouble(Purchase:: getTotalPrice)
+        return (int) purchaseRepository.findAll().stream()
+                .mapToDouble(Purchase::getTotalPrice)
                 .sum();
     }
 }
