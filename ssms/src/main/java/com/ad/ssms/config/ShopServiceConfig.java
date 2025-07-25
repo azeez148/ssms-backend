@@ -1,16 +1,9 @@
 package com.ad.ssms.config;
 
-import com.ad.ssms.shop.ShopService;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ShopServiceConfig {
-
-    @Bean
-    public ShopService shopService() {
-        return new ShopService();
-    }
-
-    // Remove the shopRepository bean definition as it will be managed by Spring Data JPA
+    // Configuration class for any custom beans if needed in the future
+    // JavaMailSender will be auto-configured by Spring Boot when mail properties are present
 }
