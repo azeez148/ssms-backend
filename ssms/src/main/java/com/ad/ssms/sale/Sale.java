@@ -26,12 +26,12 @@ public class Sale {
     private String customerName;
     private String customerAddress;
     private String customerMobile;
+    private String customerEmail;
     private String date; // You can use a date type if preferred
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<SaleItem> saleItems;
-    
 
     private int totalQuantity;
     private double totalPrice;
@@ -50,7 +50,6 @@ public class Sale {
     }
 
     // Getters and Setters
-
     public int getId() {
         return id;
     }
@@ -58,7 +57,7 @@ public class Sale {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public String getCustomerName() {
         return customerName;
     }
@@ -66,75 +65,83 @@ public class Sale {
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
-    
+
     public String getCustomerAddress() {
         return customerAddress;
     }
-    
+
     public void setCustomerAddress(String customerAddress) {
         this.customerAddress = customerAddress;
     }
-    
+
     public String getCustomerMobile() {
         return customerMobile;
     }
-    
+
     public void setCustomerMobile(String customerMobile) {
         this.customerMobile = customerMobile;
     }
-    
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
+
     public String getDate() {
         return date;
     }
-    
+
     public void setDate(String date) {
         this.date = date;
     }
-    
+
     public List<SaleItem> getSaleItems() {
         return saleItems;
     }
-    
+
     public void setSaleItems(List<SaleItem> saleItems) {
         this.saleItems = saleItems;
     }
-    
+
     public int getTotalQuantity() {
         return totalQuantity;
     }
-    
+
     public void setTotalQuantity(int totalQuantity) {
         this.totalQuantity = totalQuantity;
     }
-    
+
     public double getTotalPrice() {
         return totalPrice;
     }
-    
+
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
-    
+
     public PaymentType getPaymentType() {
         return paymentType;
     }
-    
+
     public void setPaymentType(PaymentType paymentType) {
         this.paymentType = paymentType;
     }
-    
+
     public String getPaymentReferenceNumber() {
         return paymentReferenceNumber;
     }
-    
+
     public void setPaymentReferenceNumber(String paymentReferenceNumber) {
         this.paymentReferenceNumber = paymentReferenceNumber;
     }
-    
+
     public DeliveryType getDeliveryType() {
         return deliveryType;
     }
-    
+
     public void setDeliveryType(DeliveryType deliveryType) {
         this.deliveryType = deliveryType;
     }

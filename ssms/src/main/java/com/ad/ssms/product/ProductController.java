@@ -53,11 +53,25 @@ public class ProductController {
         return productService.findAllProducts();
     }
 
+    @PostMapping("/updateProduct")
+    public Product updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest) {
+        Product product = productService.findProductById(productUpdateRequest.getId());
+            
+        
+        if (product == null) {
+            throw new RuntimeException("Product not found with ID: " + productUpdateRequest.getId());
+        }
+        product.setUnitPrice(productUpdateRequest.getUnitPrice());
+        product.setSellingPrice(productUpdateRequest.getSellingPrice());
+        product.setActive(productUpdateRequest.isActive());
+        product.setCanListed(productUpdateRequest.isCanListed());
 
+        return productService.saveProduct(product);
+    }
 
     /**
      * Update sizeMap for a product.
-     * 
+     *
      * @param productId The ID of the product.
      * @param sizeMap The new sizeMap to update.
      * @return Updated product.
@@ -69,11 +83,10 @@ public class ProductController {
 
         // Check category of the product
         // Category category = product.getCategory();
-
         Map<String, Integer> updatedSizeMap = updateRequest.getSizeMap();
         // Custom logic for jersey category sizeMap
         product.setSizeMap(updatedSizeMap);
-        
+
         // Add category-specific logic here, e.g., for "jersey" category
         // if (category != null && "jersey".equalsIgnoreCase(category.getName())) {
         //     // Apply specific logic for jersey sizeMap (e.g., modify the sizeMap based on your needs)
@@ -85,7 +98,6 @@ public class ProductController {
         //     // Handle generic categories
         //     product.setSizeMap(updateRequest.getSizeMap());
         // }
-
         return productService.saveProduct(product);
     }
 
@@ -96,12 +108,12 @@ public class ProductController {
 
     @PostMapping("/upload-images")
     public ResponseEntity<?> uploadProductImages(@RequestParam("productId") Long productId,
-                                                   @RequestParam("images") List<MultipartFile> images) {
+            @RequestParam("images") List<MultipartFile> images) {
         Product product = productService.findProductById(productId);
         if (product == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
         }
-        
+
         for (MultipartFile image : images) {
             try {
                 // Implement file storage logic here.
@@ -119,21 +131,18 @@ public class ProductController {
             } catch (IOException e) {
                 System.out.println("Error uploading image IOException: " + e.getMessage());
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                     .body("Error uploading image: " + image.getOriginalFilename());
-            }
-            catch (Exception e) {
+                        .body("Error uploading image: " + image.getOriginalFilename());
+            } catch (Exception e) {
                 System.out.println("Error uploading image Exception: " + e.getMessage());
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                     .body("Error uploading image: " + image.getOriginalFilename());
+                        .body("Error uploading image: " + image.getOriginalFilename());
             }
         }
-        
+
         // Optionally update and save the product if image information is stored.
         // productService.saveProduct(product);
-        
         return ResponseEntity.ok("Images uploaded successfully");
     }
-
 
     // update-whatsapp-group implement the update-whatsapp-group API which will send a new message to the whataspp group
     // @PostMapping("/update-whatsapp-group")
@@ -142,11 +151,9 @@ public class ProductController {
     //     // For example, you can use a third-party library or service to send the message
     //     // You can also log the message to a file or database for tracking purposes
     //     // suggest a best way to send message to whatsapp group
-        
     //     System.out.println("Sending message to WhatsApp group: " + whatsappGroupRequest.getMessage());
     //     return ResponseEntity.ok("Message sent to WhatsApp group successfully");
     // }
-
     @GetMapping("/{productId}/image")
     public ResponseEntity<byte[]> getProductImage(@PathVariable Long productId) {
         try {
@@ -157,22 +164,21 @@ public class ProductController {
 
             // Retrieve the first image file in the directory
             List<Path> imageFiles = Files.list(imagesDir)
-                                         .filter(Files::isRegularFile)
-                                         .collect(Collectors.toList());
+                    .filter(Files::isRegularFile)
+                    .collect(Collectors.toList());
             if (imageFiles.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            
+
             Path imageFile = imageFiles.get(0);
             byte[] imageBytes = Files.readAllBytes(imageFile);
             String mimeType = Files.probeContentType(imageFile);
-            
+
             return ResponseEntity.ok()
-                                 .header("Content-Type", mimeType)
-                                 .body(imageBytes);
+                    .header("Content-Type", mimeType)
+                    .body(imageBytes);
         } catch (IOException ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }
-
