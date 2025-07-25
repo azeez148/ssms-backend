@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ad.ssms.notification.EmailNotificationService;
+import com.ad.ssms.notification.WhatsAppNotificationService;
 import com.ad.ssms.product.Product;
 import com.ad.ssms.product.ProductRepository;
 
@@ -20,10 +22,10 @@ public class SaleService {
     private ProductRepository productRepository;
 
     @Autowired
-    private com.ad.ssms.notification.WhatsAppNotificationService whatsAppNotificationService;
+    private WhatsAppNotificationService whatsAppNotificationService;
 
     @Autowired
-    private com.ad.ssms.notification.EmailNotificationService emailNotificationService;
+    private EmailNotificationService emailNotificationService;
 
     public Sale saveSale(Sale sale) {
         if (sale.getSaleItems() != null) {
