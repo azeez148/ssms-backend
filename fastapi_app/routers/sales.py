@@ -15,15 +15,6 @@ def read_payment_types(skip: int = 0, limit: int = 100, db: Session = Depends(ge
     payment_types = crud.get_payment_types(db, skip=skip, limit=limit)
     return payment_types
 
-@router.post("/delivery_types/", response_model=schemas.DeliveryType)
-def create_delivery_type(delivery_type: schemas.DeliveryTypeCreate, db: Session = Depends(get_db)):
-    return crud.create_delivery_type(db=db, delivery_type=delivery_type)
-
-@router.get("/delivery_types/", response_model=List[schemas.DeliveryType])
-def read_delivery_types(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    delivery_types = crud.get_delivery_types(db, skip=skip, limit=limit)
-    return delivery_types
-
 @router.post("/sales/", response_model=schemas.Sale)
 def create_sale(sale: schemas.SaleCreate, db: Session = Depends(get_db)):
     return crud.create_sale(db=db, sale=sale)
