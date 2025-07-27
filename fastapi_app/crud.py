@@ -110,3 +110,50 @@ def create_purchase(db: Session, purchase: schemas.PurchaseCreate):
     db.commit()
     db.refresh(db_purchase)
     return db_purchase
+
+# Dashboard logic
+def get_dashboard_data(db: Session):
+    recent_sales = db.query(models.Sale).order_by(models.Sale.date.desc()).limit(5).all()
+    recent_purchases = db.query(models.Purchase).order_by(models.Purchase.date.desc()).limit(5).all()
+
+    # This is a placeholder for most sold items.
+    # A more complex query would be needed to get the actual most sold items.
+    most_sold_items = {}
+
+    total_sales = db.query(models.Sale).count()
+    total_revenue = db.query(models.Sale).with_entities(models.Sale.total_price).all()
+    total_revenue = sum([r[0] for r in total_revenue])
+
+    total_purchases = db.query(models.Purchase).count()
+    total_cost = db.query(models.Purchase).with_entities(models.Purchase.total_price).all()
+    total_cost = sum([c[0] for c in total_cost])
+
+    products = db.query(models.Product).all()
+    total_items_in_stock = 0
+    total_stock_value = 0
+    category_item_counts = {}
+
+    for product in products:
+        if product.size_map:
+            quantity = sum(product.size_map.values())
+            total_items_in_stock += quantity
+            total_stock_value += quantity * product.unit_price
+            if product.category.name in category_item_counts:
+                category_item_counts[product.category.name] += quantity
+            else:
+                category_item_counts[product.category.name] = quantity
+
+
+    dashboard = schemas.Dashboard(
+        recent_sales=recent_sales,
+        recent_purchases=recent_purchases,
+        most_sold_items=most_sold_items,
+        total_sales=total_sales,
+        total_revenue=total_revenue,
+        total_purchases=total_purchases,
+        total_cost=total_cost,
+        total_items_in_stock=total_items_in_stock,
+        total_stock_value=total_stock_value,
+        category_item_counts=category_item_counts,
+    )
+    return dashboard

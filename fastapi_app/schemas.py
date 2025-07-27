@@ -15,6 +15,21 @@ class Category(CategoryBase):
     class Config:
         orm_mode = True
 
+class Dashboard(BaseModel):
+    recent_sales: List[Sale]
+    recent_purchases: List[Purchase]
+    most_sold_items: Dict[str, int]
+    total_sales: int
+    total_revenue: float
+    total_purchases: int
+    total_cost: float
+    total_items_in_stock: int
+    total_stock_value: float
+    category_item_counts: Dict[str, int]
+
+    class Config:
+        orm_mode = True
+
 class PurchaseItemBase(BaseModel):
     product_id: int
     product_name: str
