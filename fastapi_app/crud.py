@@ -157,3 +157,9 @@ def get_dashboard_data(db: Session):
         category_item_counts=category_item_counts,
     )
     return dashboard
+
+# Home logic
+def get_home_data(db: Session):
+    products = get_products(db, limit=100) # limiting to 100 products for now
+    home = schemas.Home(products=products)
+    return home

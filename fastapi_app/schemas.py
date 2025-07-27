@@ -15,6 +15,12 @@ class Category(CategoryBase):
     class Config:
         orm_mode = True
 
+class Home(BaseModel):
+    products: List[Product]
+
+    class Config:
+        orm_mode = True
+
 class Dashboard(BaseModel):
     recent_sales: List[Sale]
     recent_purchases: List[Purchase]
