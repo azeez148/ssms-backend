@@ -3,3 +3,5 @@ uvicorn
 pywhatkit
 redis
 mangum
+psycopg2-binary
+SQLAlchemy
