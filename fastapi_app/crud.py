@@ -163,3 +163,17 @@ def get_home_data(db: Session):
     products = get_products(db, limit=100) # limiting to 100 products for now
     home = schemas.Home(products=products)
     return home
+
+# Attribute CRUD operations
+def get_attribute(db: Session, attribute_id: int):
+    return db.query(models.Attribute).filter(models.Attribute.id == attribute_id).first()
+
+def get_attributes(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Attribute).offset(skip).limit(limit).all()
+
+def create_attribute(db: Session, attribute: schemas.AttributeCreate):
+    db_attribute = models.Attribute(**attribute.dict())
+    db.add(db_attribute)
+    db.commit()
+    db.refresh(db_attribute)
+    return db_attribute

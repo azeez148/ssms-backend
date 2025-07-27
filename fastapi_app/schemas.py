@@ -15,6 +15,26 @@ class Category(CategoryBase):
     class Config:
         orm_mode = True
 
+class AttributeBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    value: str
+
+class AttributeCreate(AttributeBase):
+    category_id: int
+
+class Attribute(AttributeBase):
+    id: int
+    category: Category
+
+    class Config:
+        orm_mode = True
+
+class AttributeResponse(BaseModel):
+    name: str
+    description: Optional[str] = None
+    values: List[str]
+
 class Home(BaseModel):
     products: List[Product]
 
