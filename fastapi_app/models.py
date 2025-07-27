@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, Boolean, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, Float, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSONB
 from .database import Base
+import datetime
 
 class Category(Base):
     __tablename__ = "categories"
@@ -26,3 +27,54 @@ class Product(Base):
 
     category_id = Column(Integer, ForeignKey("categories.id"))
     category = relationship("Category", back_populates="products")
+
+class PaymentType(Base):
+    __tablename__ = "payment_types"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    description = Column(String)
+
+class DeliveryType(Base):
+    __tablename__ = "delivery_types"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    description = Column(String)
+
+class Sale(Base):
+    __tablename__ = "sales"
+
+    id = Column(Integer, primary_key=True, index=True)
+    customer_name = Column(String)
+    customer_address = Column(String)
+    customer_mobile = Column(String)
+    customer_email = Column(String)
+    date = Column(DateTime, default=datetime.datetime.utcnow)
+    total_quantity = Column(Integer)
+    total_price = Column(Float)
+    payment_reference_number = Column(String)
+
+    payment_type_id = Column(Integer, ForeignKey("payment_types.id"))
+    payment_type = relationship("PaymentType")
+
+    delivery_type_id = Column(Integer, ForeignKey("delivery_types.id"))
+    delivery_type = relationship("DeliveryType")
+
+    sale_items = relationship("SaleItem", back_populates="sale")
+
+class SaleItem(Base):
+    __tablename__ = "sale_items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(Integer)
+    product_name = Column(String)
+    product_category = Column(String)
+    size = Column(String)
+    quantity_available = Column(Integer)
+    quantity = Column(Integer)
+    sale_price = Column(Float)
+    total_price = Column(Float)
+
+    sale_id = Column(Integer, ForeignKey("sales.id"))
+    sale = relationship("Sale", back_populates="sale_items")
