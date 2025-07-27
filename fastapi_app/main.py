@@ -8,7 +8,7 @@ import time
 from mangum import Mangum
 
 from .database import engine, Base
-from .routers import products, sales, purchases
+from .routers import products, sales, purchases, stock
 
 Base.metadata.create_all(bind=engine)
 
@@ -16,6 +16,7 @@ app = FastAPI()
 app.include_router(products.router, prefix="/api")
 app.include_router(sales.router, prefix="/api")
 app.include_router(purchases.router, prefix="/api")
+app.include_router(stock.router, prefix="/api")
 
 handler = Mangum(app)
 

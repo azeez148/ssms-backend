@@ -5,3 +5,5 @@ redis
 mangum
 psycopg2-binary
 SQLAlchemy
+pandas
+openpyxl
