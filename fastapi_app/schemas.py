@@ -15,6 +15,49 @@ class Category(CategoryBase):
     class Config:
         orm_mode = True
 
+class PurchaseItemBase(BaseModel):
+    product_id: int
+    product_name: str
+    product_category: str
+    size: str
+    quantity_available: int
+    quantity: int
+    purchase_price: float
+    total_price: float
+
+class PurchaseItemCreate(PurchaseItemBase):
+    pass
+
+class PurchaseItem(PurchaseItemBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+class PurchaseBase(BaseModel):
+    supplier_name: str
+    supplier_address: str
+    supplier_mobile: str
+    supplier_email: str
+    date: datetime.datetime
+    total_quantity: int
+    total_price: float
+    payment_reference_number: str
+
+class PurchaseCreate(PurchaseBase):
+    payment_type_id: int
+    delivery_type_id: int
+    purchase_items: List[PurchaseItemCreate]
+
+class Purchase(PurchaseBase):
+    id: int
+    payment_type: PaymentType
+    delivery_type: DeliveryType
+    purchase_items: List[PurchaseItem] = []
+
+    class Config:
+        orm_mode = True
+
 class PaymentTypeBase(BaseModel):
     name: str
     description: Optional[str] = None

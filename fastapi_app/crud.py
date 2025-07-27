@@ -93,3 +93,20 @@ def create_sale(db: Session, sale: schemas.SaleCreate):
     db.commit()
     db.refresh(db_sale)
     return db_sale
+
+# Purchase CRUD operations
+def get_purchase(db: Session, purchase_id: int):
+    return db.query(models.Purchase).filter(models.Purchase.id == purchase_id).first()
+
+def get_purchases(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Purchase).offset(skip).limit(limit).all()
+
+def create_purchase(db: Session, purchase: schemas.PurchaseCreate):
+    db_purchase = models.Purchase(**purchase.dict(exclude={'purchase_items'}))
+    for item in purchase.purchase_items:
+        db_item = models.PurchaseItem(**item.dict())
+        db_purchase.purchase_items.append(db_item)
+    db.add(db_purchase)
+    db.commit()
+    db.refresh(db_purchase)
+    return db_purchase
